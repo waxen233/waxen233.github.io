@@ -123,3 +123,11 @@
     transform: none !important;
   }
 }
+
+/* 进站锁：没点开之前，整页不许滚 */
+html.se-locked,
+html.se-locked body {
+  overflow: hidden !important;
+  height: 100% !important;
+  touch-action: none;
+}

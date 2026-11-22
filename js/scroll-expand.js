@@ -104,6 +104,17 @@
 
     apply(0)
 
+    /* ---------- 进站锁：没展开之前不许滚 ---------- */
+    var root = document.documentElement
+    function lock() {
+      root.classList.add('se-locked')
+      window.scrollTo(0, 0)
+    }
+    function unlock() {
+      root.classList.remove('se-locked')
+    }
+    lock()
+
     /* ---------- 5. 点一下 → 慢慢撑满 ---------- */
     var expanded = false
     function expand() {
@@ -112,6 +123,7 @@
       frameEl.classList.add('se-expanded')
       if (hintEl) hintEl.classList.add('hide')
 
+      try {
       var t0 = 0
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       var dur = reduce ? 1 : SE.duration
@@ -121,9 +133,16 @@
         var p = clamp((now - t0) / dur, 0, 1)
         var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2
         apply(e)
-        if (p < 1) requestAnimationFrame(step)
+        if (p < 1) {
+          requestAnimationFrame(step)
+        } else {
+          unlock()
+        }
       }
       requestAnimationFrame(step)
+      } catch (err) {
+        unlock()
+      }
     }
 
     // 绑在 #page-header 上：标题、提示这些覆盖层是 frame 的兄弟节点，
