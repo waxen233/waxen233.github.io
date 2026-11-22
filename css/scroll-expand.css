@@ -61,8 +61,9 @@
   object-position: 62% 50%;
   z-index: 0;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.8s ease;
+  /* 一开始就显示：先出 poster 首帧，视频解码好再无缝接上，避免首屏黑一下 */
+  opacity: 1;
+  transition: opacity 0.3s ease;
   will-change: transform;
   transform-origin: center;
 }
