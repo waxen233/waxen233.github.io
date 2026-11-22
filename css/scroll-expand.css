@@ -1,0 +1,125 @@
+/* ===== 首屏「点一下撑满全屏」 ===== */
+/* 只有首页会挂 #se-frame，其它页面这些选择器都不命中 */
+
+/* 会撑开的框：所有裁切都发生在这里，nav 在外面不会被裁到 */
+#se-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  cursor: pointer;
+  clip-path: inset(21% 29% 21% 29% round 24px);
+}
+
+#se-frame.se-expanded {
+  cursor: default;
+}
+
+/* 框外的底色：夜色 */
+#page-header {
+  background: #080b14 !important;
+  background-image: none !important;
+}
+
+#hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 50%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  will-change: transform;
+  transform-origin: center;
+}
+
+#hero-video.ready {
+  opacity: 1;
+}
+
+/* 撑开后压暗用的渐变，随进度淡入 */
+#se-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.78),
+    rgba(0, 0, 0, 0.1) 45%,
+    rgba(0, 0, 0, 0.38)
+  );
+}
+
+/* nav / 标题 / 副标题 / 滚动提示 在框之上 */
+#page-header > #nav,
+#page-header > #site-info,
+#page-header > #scroll-down,
+#page-header > .banner-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* 方块刚打开时给个呼吸提示 */
+#se-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1.6rem;
+  z-index: 3;
+  text-align: center;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#se-hint.hide {
+  opacity: 0 !important;
+  animation: none;
+}
+
+@keyframes sehint {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+#se-hint {
+  animation: sehint 2.4s ease-in-out infinite;
+}
+
+/* 打字光标 */
+#subtitle::after {
+  content: "|";
+  margin-left: 2px;
+  animation: subblink 1s steps(1) infinite;
+}
+
+@keyframes subblink {
+  50% {
+    opacity: 0;
+  }
+}
+
+#site-info {
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #se-frame {
+    clip-path: inset(0 0 0 0 round 0) !important;
+  }
+  #hero-video {
+    transform: none !important;
+  }
+}
