@@ -104,16 +104,29 @@
 
     apply(0)
 
-    /* ---------- 进站锁：没展开之前不许滚 ---------- */
+    /* ---------- 进站锁：同一个标签页会话里只在第一次锁 ---------- */
     var root = document.documentElement
+    var KEY = 'se-entered'
+    var seen = false
+    try { seen = sessionStorage.getItem(KEY) === '1' } catch (e) {}
+
     function lock() {
       root.classList.add('se-locked')
       window.scrollTo(0, 0)
     }
     function unlock() {
       root.classList.remove('se-locked')
+      try { sessionStorage.setItem(KEY, '1') } catch (e) {}
     }
-    lock()
+
+    if (seen) {
+      // 这一轮已经进过站：直接是展开态，不再拦
+      apply(1)
+      if (frameEl) frameEl.classList.add('se-expanded')
+      if (hintEl) hintEl.classList.add('hide')
+    } else {
+      lock()
+    }
 
     /* ---------- 5. 点一下 → 慢慢撑满 ---------- */
     var expanded = false
