@@ -188,3 +188,139 @@ html.se-locked body {
 .nav-darkmode i {
   pointer-events: none;
 }
+
+/* ===== 首帧占位 =====
+   #se-frame 是 scroll-expand.js 动态建的，脚本跑起来之前那块是小黑洞。
+   这里先用一张 fixed 的海报把它垫住，JS 建好真框后立刻移除。 */
+#se-plate {
+  display: none;
+}
+
+html:has(#page-header.full_page) #se-plate {
+  display: block;
+  position: fixed;
+  left: 29vw;
+  top: 21vh;
+  width: 42vw;
+  height: 58vh;
+  border-radius: 24px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  background: #05060a;
+}
+
+/* 海报要和视频用同一套取景：视频铺满整个 header（1280×800）再被裁成卡片，
+   所以这里也让 img 铺满视口、按 header 原点偏移，再由 #se-plate 的圆角裁切。 */
+#se-plate img {
+  position: absolute;
+  left: -29vw;
+  top: -21vh;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: 62% 50%;
+  transform: scale(1.35);
+  transform-origin: center;
+}
+
+/* ===== 首页：背景钉住不动 =====
+   首屏那一层（视频/海报）直接改成 fixed 的背景板：
+   滚动时它一动不动，只有内容在它上面滑过去；背景再按滚动量逐渐虚化。
+   这样才是「背景不动、只变虚」，而不是「背景先滚走」。 */
+html:has(#page-header.full_page) #page-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+}
+
+html:has(#page-header.full_page) {
+  background: #070910;
+}
+
+html:has(#page-header.full_page) body {
+  background: transparent;
+}
+
+/* 正文整体下移一屏，滑过固定的背景 */
+html:has(#page-header.full_page) #content-inner {
+  position: relative;
+  z-index: 1;
+  margin-top: 100vh;
+}
+
+/* 往下滚之后，首屏的标题/箭头/提示淡出，别压在内容上 */
+html:has(#page-header.full_page) #page-header > #nav,
+html:has(#page-header.full_page) #page-header > #site-info,
+html:has(#page-header.full_page) #page-header > #scroll-down,
+html:has(#page-header.full_page) #se-hint {
+  transition: opacity 0.45s ease;
+}
+
+html.se-scrolled #page-header > #nav,
+html.se-scrolled #page-header > #site-info,
+html.se-scrolled #page-header > #scroll-down,
+html.se-scrolled #se-hint {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== 页脚 =====
+   主题把页脚刷成一块亮蓝（#footer 的 $light-blue），和夜色页面不搭。
+   改成一层略微透明的磨砂白，透出后面的背景。 */
+#footer {
+  background-color: rgba(255, 255, 255, 0.58) !important;
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#footer,
+#footer * {
+  color: #454852 !important;
+}
+
+#footer a:hover,
+#footer a:hover * {
+  color: #1f2228 !important;
+}
+
+html[data-theme="dark"] #footer {
+  background-color: rgba(14, 16, 22, 0.56) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] #footer,
+html[data-theme="dark"] #footer * {
+  color: #c2c4cc !important;
+}
+
+html[data-theme="dark"] #footer a:hover,
+html[data-theme="dark"] #footer a:hover * {
+  color: #ffffff !important;
+}
+
+/* ===== 首页卡片：磨砂玻璃 =====
+   背景是固定的一张夜景，卡片却是一块块实心白，割裂感很重。
+   这里把卡片改成半透明的白纱 + 背景模糊，让底下的画面透上来。 */
+html:has(#page-header.full_page) #recent-posts .recent-post-item,
+html:has(#page-header.full_page) .card-widget,
+html:has(#page-header.full_page) .post {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 8px 28px rgba(6, 10, 18, 0.18);
+}
+
+html[data-theme="dark"]:has(#page-header.full_page) #recent-posts .recent-post-item,
+html[data-theme="dark"]:has(#page-header.full_page) .card-widget,
+html[data-theme="dark"]:has(#page-header.full_page) .post {
+  background: rgba(20, 23, 31, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}

@@ -65,6 +65,10 @@
       frame.appendChild(scrim)
       header.insertBefore(frame, header.firstChild)
 
+      // 真框建好后，把首帧占位（#se-plate）撤掉，避免两张图叠着
+      var plate = document.getElementById('se-plate')
+      if (plate && plate.parentNode) plate.parentNode.removeChild(plate)
+
       var hint = document.createElement('div')
       hint.id = 'se-hint'
       hint.textContent = '点一下展开'
@@ -164,7 +168,42 @@
       requestAnimationFrame(typeTick)
     }
     typeTick()
+
+    sceneBlur()
   }
+
+  /* ---- 背景虚化 ----
+     背景（首屏那层）是 fixed 的，滚动时它自己不动，
+     只把里面的媒介框按滚动深度逐渐糊掉，内容就像浮在磨砂玻璃上。 */
+  function sceneBlur() {
+    var frameEl = document.getElementById('se-frame')
+    var heroVideo = document.getElementById('hero-video')
+    var y = window.pageYOffset || document.documentElement.scrollTop
+    var vh = window.innerHeight
+
+    document.documentElement.classList.toggle('se-scrolled', y > 40)
+
+    if (frameEl) {
+      /* 渐进虚化：滚过 8% 屏高开始，到 95% 屏高糊满 16px */
+      var p = (y - vh * 0.08) / (vh * 0.87)
+      p = Math.max(0, Math.min(1, p))
+      var v = 'blur(' + (p * 16).toFixed(2) + 'px)'
+      frameEl.style.webkitFilter = v
+      frameEl.style.filter = v
+
+      /* 糊得差不多的时候把视频停住：画面已经看不清了，省显卡 */
+      if (heroVideo) {
+        if (p > 0.55 && !heroVideo.paused) heroVideo.pause()
+        else if (p < 0.35 && heroVideo.paused && !window.__seUserPaused) {
+          var pr = heroVideo.play()
+          if (pr && pr.catch) pr.catch(function () {})
+        }
+      }
+    }
+  }
+
+  window.addEventListener('scroll', sceneBlur, { passive: true })
+  window.addEventListener('resize', sceneBlur)
 
   if (document.readyState !== 'loading') boot()
   else document.addEventListener('DOMContentLoaded', boot)
