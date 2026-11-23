@@ -1,0 +1,125 @@
+/* 播放器对比页：四种皮肤共用一套逻辑 */
+.pd-root { --pl-ink: #f4f6fa; display: flex; flex-direction: column; gap: 26px; }
+.pd-tip { color: #7b7f86; font-size: 13px; margin: 0; }
+.pd-cell h2 { margin: 0 0 12px; font-size: 15px; font-weight: 600; color: #3d4046; }
+.pd-stage {
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 26px;
+  border-radius: 18px;
+  background: linear-gradient(140deg, #0d1420, #101a26 55%, #0b1119);
+  overflow: hidden;
+}
+
+/* ---------- 通用部件 ---------- */
+.pl-cover { width: 62px; height: 62px; border-radius: 8px; object-fit: cover; flex: 0 0 auto; }
+.pl-meta { min-width: 0; flex: 1 1 auto; }
+.pl-title { display: block; font-size: 13.5px; font-weight: 600; color: #f2f4f8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-artist { display: block; margin-top: 3px; font-size: 11.5px; color: rgba(242, 244, 248, .58); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-btn {
+  display: grid; place-items: center;
+  width: 32px; height: 32px; padding: 0;
+  border: 0; border-radius: 50%;
+  background: transparent; color: rgba(242, 244, 248, .82);
+  cursor: pointer; transition: background-color .16s ease, color .16s ease, transform .16s ease;
+}
+.pl-btn:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+.pl-btn:active { transform: scale(.94); }
+.pl-btn svg { width: 17px; height: 17px; fill: currentColor; }
+.pl-play { width: 38px; height: 38px; background: rgba(255, 255, 255, .14); }
+.pl-play svg { width: 19px; height: 19px; }
+.pl-bar { position: relative; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .2); cursor: pointer; }
+.pl-bar-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 2px; background: #fff; }
+.pl-bar::after { content: ''; position: absolute; inset: 0; }
+
+/* ---------- A 暗玻璃可拖拽 ---------- */
+.pl-glass {
+  width: 300px; border-radius: 14px; overflow: hidden;
+  background: radial-gradient(200px 90px at 85% 0, rgba(255,255,255,.12), transparent 70%), linear-gradient(rgba(16,16,20,.62), rgba(16,16,20,.78));
+  box-shadow: 0 14px 40px rgba(0,0,0,.42), 0 2px 8px rgba(0,0,0,.2);
+  backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
+  color: var(--pl-ink);
+}
+.pl-glass-head {
+  height: 34px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px; cursor: grab; user-select: none;
+  background: rgba(255,255,255,.07); border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.pl-glass-head:active { cursor: grabbing; }
+.pl-glass-head span { font-size: 11.5px; color: rgba(255,255,255,.55); letter-spacing: .06em; }
+.pl-glass-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.pl-row { display: flex; align-items: center; gap: 10px; }
+.pl-glass .pl-btn { color: rgba(255,255,255,.9); }
+
+/* ---------- B 贴边自动隐藏 ---------- */
+.pl-edge {
+  position: relative; width: 46px; height: 150px; border-radius: 0 12px 12px 0;
+  margin-left: -26px; padding-left: 26px;
+  background: rgba(14,18,26,.55); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.14); border-left: 0;
+  transition: width .34s cubic-bezier(.23,1,.32,1), background-color .2s ease;
+  overflow: hidden; color: var(--pl-ink);
+}
+.pl-edge:hover, .pl-edge[data-open] { width: 268px; background: rgba(14,18,26,.72); }
+.pl-edge-tab { position: absolute; left: 0; top: 0; width: 46px; height: 100%; display: grid; place-items: center; color: rgba(255,255,255,.8); }
+.pl-edge-inner { display: flex; align-items: center; gap: 10px; height: 100%; padding: 0 12px 0 46px; opacity: 0; transition: opacity .2s ease .08s; }
+.pl-edge:hover .pl-edge-inner, .pl-edge[data-open] .pl-edge-inner { opacity: 1; }
+
+/* ---------- C 黑胶唱片机 ---------- */
+.pl-vinyl {
+  position: relative; width: 220px; padding: 18px 16px 16px; border-radius: 16px;
+  background: linear-gradient(150deg, rgba(26,29,36,.9), rgba(14,16,21,.94));
+  border: 1px solid rgba(255,255,255,.1); color: var(--pl-ink);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.pl-disc-wrap { position: relative; width: 132px; height: 132px; }
+.pl-disc {
+  width: 132px; height: 132px; border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.05) 0 1px, transparent 1px 4px),
+    radial-gradient(circle at 50% 50%, #2a2d33 0 26%, #101215 27%, #1b1e23 40%, #0d0f12 60%, #15181c 100%);
+  box-shadow: 0 10px 26px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.07);
+  display: grid; place-items: center; cursor: pointer;
+}
+.pl-disc::after {
+  content: ''; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--disc-cover, #3a3f49) center/cover;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,.5), 0 0 0 6px rgba(0,0,0,.35);
+}
+.pl-vinyl[data-playing] .pl-disc { animation: pd-spin 6s linear infinite; }
+@keyframes pd-spin { to { transform: rotate(360deg); } }
+.pl-arm {
+  position: absolute; right: -6px; top: -10px; width: 56px; height: 96px;
+  transform-origin: 78% 12%; transform: rotate(-24deg); transition: transform .5s cubic-bezier(.2,.8,.2,1);
+  pointer-events: none;
+}
+.pl-vinyl[data-playing] .pl-arm { transform: rotate(-4deg); }
+.pl-vinyl .pl-row { width: 100%; }
+.pl-vinyl .pl-title, .pl-vinyl .pl-artist { text-align: center; }
+
+/* ---------- D 三态 dock ---------- */
+.pl-dock {
+  --dock-w: 62px;
+  position: relative; display: flex; align-items: center; gap: 12px;
+  width: var(--dock-w); height: 62px; padding: 8px;
+  border-radius: 34px; overflow: hidden;
+  background: rgba(16,20,28,.72); border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 12px 30px rgba(0,0,0,.4);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  transition: width .38s cubic-bezier(.23,1,.32,1), border-radius .38s ease;
+  color: var(--pl-ink);
+}
+.pl-dock[data-open] { --dock-w: 330px; border-radius: 20px; }
+.pl-dock-disc {
+  flex: 0 0 auto; width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  background: radial-gradient(circle at 50% 50%, #2b2f36 0 30%, #13161a 32%, #1c2026 62%, #0f1216 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 4px 12px rgba(0,0,0,.4);
+  display: grid; place-items: center;
+}
+.pl-dock[data-playing] .pl-dock-disc { animation: pd-spin 6s linear infinite; }
+.pl-dock-disc::after { content: ''; width: 18px; height: 18px; border-radius: 50%; background: var(--dock-cover, #46505f); }
+.pl-dock-body { display: flex; align-items: center; gap: 10px; min-width: 0; opacity: 0; transition: opacity .2s ease .1s; }
+.pl-dock[data-open] .pl-dock-body { opacity: 1; }

@@ -352,3 +352,38 @@ html[data-theme="dark"]:has(#page-header.full_page) .post {
   border: 1px solid rgba(255, 255, 255, 0.07);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
 }
+
+/* ---------- 侧边栏：分类/标签/归档 合并成一张三行卡 ---------- */
+.card-nav-merge .nm-list { display: flex; flex-direction: column; }
+.card-nav-merge .nm-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 8px;
+  border-radius: 10px;
+  color: var(--font-color, #4c4948);
+  text-decoration: none;
+  transition: background-color .18s ease, transform .18s ease;
+}
+.card-nav-merge .nm-row + .nm-row { border-top: 1px solid rgba(128, 128, 128, .12); }
+.card-nav-merge .nm-row:hover { background: rgba(128, 128, 128, .1); transform: translateX(2px); }
+.card-nav-merge .nm-icon { width: 16px; text-align: center; opacity: .68; }
+.card-nav-merge .nm-label { flex: 1 1 auto; font-size: 14.5px; }
+.card-nav-merge .nm-count {
+  font-size: 12px;
+  opacity: .5;
+  font-variant-numeric: tabular-nums;
+}
+html[data-theme="dark"] .card-nav-merge .nm-row { color: rgba(240, 243, 248, .88); }
+html[data-theme="dark"] .card-nav-merge .nm-row + .nm-row { border-top-color: rgba(255, 255, 255, .08); }
+html[data-theme="dark"] .card-nav-merge .nm-row:hover { background: rgba(255, 255, 255, .08); }
+
+/* 侧边栏「博客」标题：站酷快乐体，只裁了“博客”两个字的子集体（948 B） */
+@font-face {
+  font-family: 'BokeCute';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/boke-zcool-kuaile.woff2') format('woff2');
+}
+.card-nav-merge .item-headline span { font-family: 'BokeCute', inherit; font-size: 17px; letter-spacing: .04em; }
