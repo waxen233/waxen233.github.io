@@ -202,7 +202,27 @@
     }
   }
 
+  /* 导航条：首屏是固定背景层，导航留在里面会被正文压住 —— 移到 body 下再钉住 */
+  var navEl = document.getElementById('nav')
+  /* 只在首页搬：其它页面没有固定背景层，导航留在原处才对 */
+  if (navEl && document.querySelector('#page-header.full_page') &&
+      navEl.parentNode !== document.body) {
+    document.body.appendChild(navEl)
+  }
+
+  var lastY = window.pageYOffset || 0
+
+  function navToggle() {
+    if (!navEl) return
+    var y = window.pageYOffset || document.documentElement.scrollTop
+    if (y < 40) navEl.classList.remove('nav-hide')
+    else if (y > lastY + 4) navEl.classList.add('nav-hide')
+    else if (y < lastY - 4) navEl.classList.remove('nav-hide')
+    lastY = y
+  }
+
   window.addEventListener('scroll', sceneBlur, { passive: true })
+  window.addEventListener('scroll', navToggle, { passive: true })
   window.addEventListener('resize', sceneBlur)
 
   if (document.readyState !== 'loading') boot()
