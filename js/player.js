@@ -81,12 +81,17 @@
       '<div class="pl-volume" data-vol role="slider" aria-label="音量"><div class="pl-vol-fill"></div><div class="pl-vol-thumb"></div></div>' +
       '</div>'
 
+    var firstOpen = true
     q('[data-disc]').addEventListener('click', function (e) {
       e.stopPropagation()
       if (suppressClick) return
       open = !open
       root.toggleAttribute('data-open', open)
-      toggle()
+      /* 只有第一次点开时才自动开始播放；之后点它只管展开/收起 */
+      if (open && firstOpen) {
+        firstOpen = false
+        toggle()
+      }
     })
     qa('[data-play]').forEach(function (n) {
       n.addEventListener('click', function (e) { e.stopPropagation(); toggle() })
