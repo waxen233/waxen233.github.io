@@ -2,7 +2,7 @@
 (function () {
   var API = 'https://api.injahow.cn/meting/'
   var SERVER = 'tencent'
-  var PLAYLIST = '9762369050' /* TODO: 换成你自己的 QQ 音乐歌单 ID */
+  var PLAYLIST = '9812067108' /* 用户自己的 QQ 音乐歌单 */
 
   var ICON = {
     play: '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
@@ -198,15 +198,28 @@
     restorePos()
     makeDraggable()
 
-    fetch(API + '?server=' + SERVER + '&type=playlist&id=' + PLAYLIST)
-      .then(function (r) { return r.json() })
-      .then(function (data) {
-        songs = (data && data.data) || data || []
-        if (!songs.length) throw new Error('empty')
+    /* 优先用本地清单（source/music/list.json），没有才退回 Meting 歌单 */
+    fetch('/music/list.json', { cache: 'no-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('no-list')
+        return r.json()
+      })
+      .then(function (list) {
+        if (!list || !list.length) throw new Error('empty')
+        songs = list
         load(0, false)
       })
       .catch(function () {
-        qa('[data-title]').forEach(function (n) { n.textContent = '歌单加载失败' })
+        return fetch(API + '?server=' + SERVER + '&type=playlist&id=' + PLAYLIST)
+          .then(function (r) { return r.json() })
+          .then(function (data) {
+            songs = (data && data.data) || data || []
+            if (!songs.length) throw new Error('empty')
+            load(0, false)
+          })
+          .catch(function () {
+            qa('[data-title]').forEach(function (n) { n.textContent = '暂无歌单' })
+          })
       })
   }
 
