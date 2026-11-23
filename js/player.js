@@ -100,9 +100,9 @@
     })
 
     /* ---------- 音量：自绘滑块 + 拖到两端会像橡胶一样拉伸再弹回 ---------- */
-    var VOL_KEY = 'player-vol'
+    var VOL_KEY = 'player-vol2'
     var savedVol = parseFloat(localStorage.getItem(VOL_KEY))
-    if (!(savedVol >= 0 && savedVol <= 1)) savedVol = 0.8
+    if (!(savedVol >= 0 && savedVol <= 1)) savedVol = 0.35
     var volEl = q('[data-vol]')
     var volFill = q('.pl-vol-fill')
     var volThumb = q('.pl-vol-thumb')
