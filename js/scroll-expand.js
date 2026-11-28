@@ -225,6 +225,12 @@
   window.addEventListener('scroll', navToggle, { passive: true })
   window.addEventListener('resize', sceneBlur)
 
+  window.__seReinit = function () {
+    var f = document.getElementById('se-frame')
+    if (f) return /* 已经建过了，别重复建 */
+    boot()
+  }
+
   if (document.readyState !== 'loading') boot()
   else document.addEventListener('DOMContentLoaded', boot)
 })()

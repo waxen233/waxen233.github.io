@@ -52,6 +52,8 @@
     })
   }
 
+  window.__smInit = boot
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot)
   else boot()
 })()

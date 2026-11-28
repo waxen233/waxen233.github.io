@@ -387,3 +387,160 @@ html[data-theme="dark"] .card-nav-merge .nm-row:hover { background: rgba(255, 25
   src: url('/fonts/boke-zcool-kuaile.woff2') format('woff2');
 }
 .card-nav-merge .item-headline span { font-family: 'BokeCute', inherit; font-size: 17px; letter-spacing: .04em; }
+
+/* ---- swup：整块内容淡出/淡入 ---- */
+#body-wrap {
+  transition: opacity 0.34s ease;
+}
+html.is-animating #body-wrap {
+  opacity: 0;
+}
+
+/* ---- swup：导航条全站固定（JS 已把它搬到 body 下） ---- */
+html.swup-enabled body > #nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  transition: transform 0.34s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.34s ease,
+    background-color 0.34s ease;
+}
+html.swup-enabled body > #nav.nav-hide {
+  transform: translateY(-104%);
+  opacity: 0;
+  pointer-events: none;
+}
+html.swup-enabled.se-scrolled body > #nav {
+  background: rgba(8, 10, 15, 0.5);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+}
+
+/* ---- swup：顶部加载进度条 ---- */
+#swup-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+#swup-progress.is-on {
+  opacity: 1;
+}
+#swup-progress > i {
+  display: block;
+  height: 100%;
+  width: var(--p, 0%);
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, #e586a6, #7fb0ff);
+  box-shadow: 0 0 8px rgba(229, 134, 166, 0.55);
+  transition: width 0.2s ease;
+}
+#swup-progress.is-done > i {
+  transition: width 0.18s ease;
+}
+
+/* ---- swup：过渡期间不要露出白底（否则像闪光弹） ---- */
+html.is-animating,
+html.is-changing {
+  background: #06070b;
+}
+html.is-animating body,
+html.is-changing body {
+  background: transparent !important;
+}
+
+/* ---- swup：换页遮罩（先压暗再揭开，杜绝白屏闪烁） ---- */
+#swup-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  opacity: 0;
+  background: #06070b;
+  transition: opacity 0.5s ease;
+}
+#swup-veil.is-on {
+  opacity: 1;
+  transition: opacity 0.18s ease;
+}
+
+/* ---- 全站背景：铺主页那一帧，内容页不再有白纸衬托 ---- */
+html {
+  background: #06080d;
+}
+body {
+  background: transparent !important;
+}
+#site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #06080d url("/img/site-bg.jpg") center / cover no-repeat;
+}
+#site-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 8, 13, 0.62) 0%,
+    rgba(6, 8, 13, 0.38) 42%,
+    rgba(6, 8, 13, 0.66) 100%
+  );
+}
+
+/* 内容页：卡片改成玻璃片，浮在背景上 */
+html:not(:has(#page-header.full_page)) #recent-posts .recent-post-item,
+html:not(:has(#page-header.full_page)) .card-widget,
+html:not(:has(#page-header.full_page)) #content-inner > #page,
+html:not(:has(#page-header.full_page)) #archive,
+html:not(:has(#page-header.full_page)) #post {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 12px 34px rgba(4, 6, 12, 0.18);
+}
+
+html[data-theme="dark"]:not(:has(#page-header.full_page)) #recent-posts .recent-post-item,
+html[data-theme="dark"]:not(:has(#page-header.full_page)) .card-widget,
+html[data-theme="dark"]:not(:has(#page-header.full_page)) #post {
+  background: rgba(20, 23, 31, 0.72) !important;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 顶部 banner 直接透明，让全站底图透上来，不留下那块深色方框 */
+html:not(:has(#page-header.full_page)) #page-header,
+html:not(:has(#page-header.full_page)) #page-header.post-bg {
+  background: transparent !important;
+}
+html:not(:has(#page-header.full_page)) #page-header::before,
+html:not(:has(#page-header.full_page)) #page-header.post-bg::before {
+  background: transparent !important;
+}
+
+/* 文章页头部：强制透明，别用主题的浅蓝底 */
+html:not(:has(#page-header.full_page)) #page-header.post-bg,
+html:not(:has(#page-header.full_page)) #page-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html:not(:has(#page-header.full_page)) #page-header.post-bg::before,
+html:not(:has(#page-header.full_page)) #page-header.post-bg::after {
+  display: none !important;
+}
+
+/* 换页时内容淡入淡出，背景（#site-bg）保持不动 */
+#body-wrap {
+  will-change: opacity;
+}

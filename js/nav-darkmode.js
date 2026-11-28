@@ -51,5 +51,7 @@
     });
   }
 
+  window.__ndInit = build;
+
   ready(build);
 })();
