@@ -544,3 +544,146 @@ html:not(:has(#page-header.full_page)) #page-header.post-bg::after {
 #body-wrap {
   will-change: opacity;
 }
+
+/* ---- 首页卡片：标签做成小药丸，跟在分类后面 ---- */
+#recent-posts .recent-post-info .article-meta.tags .fas.fa-tag {
+  display: none;
+}
+#recent-posts .recent-post-info .article-meta.tags a.article-meta__tags {
+  display: inline-block;
+  margin: 0 3px 0 0;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: rgba(120, 140, 200, 0.16);
+  color: #5a6b93;
+  font-size: 0.86em;
+  line-height: 1.7;
+}
+html[data-theme="dark"] #recent-posts .recent-post-info .article-meta.tags a.article-meta__tags {
+  background: rgba(150, 170, 230, 0.16);
+  color: #a9b6d6;
+}
+
+/* ---- 首页卡片：标签挪到右下角 ---- */
+#recent-posts .recent-post-info {
+  position: relative;
+}
+#recent-posts .recent-post-info .content {
+  margin-bottom: 26px;
+}
+.card-tags-bottom {
+  position: absolute;
+  right: 16px;
+  bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+  max-width: 60%;
+}
+.card-tags-bottom a.article-meta__tags {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: 999px;
+  background: rgba(120, 140, 200, 0.16);
+  color: #5a6b93;
+  font-size: 12px;
+  line-height: 1.8;
+  transition: background-color 0.2s ease;
+}
+.card-tags-bottom a.article-meta__tags:hover {
+  background: rgba(120, 140, 200, 0.3);
+}
+html[data-theme="dark"] .card-tags-bottom a.article-meta__tags {
+  background: rgba(150, 170, 230, 0.16);
+  color: #a9b6d6;
+}
+
+/* ---- 卡片标签：照参考站的样子，改成右下角的 #纯文字 ---- */
+#recent-posts .recent-post-info .content {
+  margin-bottom: 30px;
+}
+.card-tags-bottom {
+  position: absolute;
+  right: 18px;
+  bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  max-width: 62%;
+  font-size: 12.5px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+.card-tags-bottom a.article-meta__tags {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: rgba(78, 88, 112, 0.62);
+  font-size: inherit;
+}
+.card-tags-bottom a.article-meta__tags:hover {
+  background: none;
+  color: #5a6b93;
+  text-decoration: underline;
+}
+html[data-theme="dark"] .card-tags-bottom a.article-meta__tags {
+  background: none;
+  color: rgba(196, 205, 226, 0.55);
+}
+html[data-theme="dark"] .card-tags-bottom a.article-meta__tags:hover {
+  color: #c9d4ec;
+}
+
+/* ---- 卡片标签改成"页脚一行"（照 fqzlr 的 moment-card__footer 结构） ---- */
+#recent-posts .recent-post-info .content {
+  margin-bottom: 0;
+}
+.card-tags-bottom {
+  position: static;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 14px;
+  max-width: none;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* 卡片标签 hover 不要下划线，只轻微加深 */
+.card-tags-bottom a.article-meta__tags:hover,
+.card-tags-bottom a.article-meta__tags:focus {
+  text-decoration: none;
+  color: #6b7ba6;
+}
+html[data-theme="dark"] .card-tags-bottom a.article-meta__tags:hover {
+  color: #b9c6e4;
+}
+
+/* ---- 全站字体：正文用霞鹜文楷 Screen，标题保持黑体 ---- */
+body {
+  font-family: 'LXGW WenKai Screen', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+#site-title,
+#site-subtitle,
+#nav,
+#page-header #site-title,
+#recent-posts .article-title,
+.recent-post-info .article-title,
+.post-title,
+.card-widget .item-headline,
+.card-nav-merge .item-headline,
+#aside-content .card-info .author-info__name,
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+h1, h2, h3, h4, h5, h6 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+}

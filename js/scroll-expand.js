@@ -108,8 +108,15 @@
 
     apply(0)
 
-    /* ---------- 进站锁：每次进首页都要先点开 ---------- */
+    /* ---------- 进站锁：只在本次会话第一次打开时出现 ---------- */
     var root = document.documentElement
+    var SEEN_KEY = 'se-entered'
+    function seen() {
+      try { return sessionStorage.getItem(SEEN_KEY) === '1' } catch (e) { return false }
+    }
+    function markSeen() {
+      try { sessionStorage.setItem(SEEN_KEY, '1') } catch (e) {}
+    }
     function lock() {
       root.classList.add('se-locked')
       window.scrollTo(0, 0)
@@ -117,7 +124,7 @@
     function unlock() {
       root.classList.remove('se-locked')
     }
-    lock()
+    if (!seen()) lock()
 
     /* ---------- 5. 点一下 → 慢慢撑满 ---------- */
     var expanded = false
@@ -141,12 +148,22 @@
           requestAnimationFrame(step)
         } else {
           unlock()
+          markSeen()
         }
       }
       requestAnimationFrame(step)
       } catch (err) {
         unlock()
       }
+    }
+
+    // 本次会话已经看过一遍：不再等点击，直接铺满
+    if (seen()) {
+      expanded = true
+      frameEl.classList.add('se-expanded')
+      if (hintEl) hintEl.classList.add('hide')
+      apply(1)
+      unlock()
     }
 
     // 绑在 #page-header 上：标题、提示这些覆盖层是 frame 的兄弟节点，

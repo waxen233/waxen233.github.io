@@ -105,21 +105,25 @@
   function reinit() {
     syncNav()
 
+    var seen = false
+    try { seen = sessionStorage.getItem('se-entered') === '1' } catch (e) {}
+
     if (isHome()) {
-      if (!document.getElementById('se-frame') && !document.getElementById('se-plate')) {
+      if (!seen && !document.getElementById('se-frame') && !document.getElementById('se-plate')) {
         var plate = document.createElement('div')
         plate.id = 'se-plate'
         plate.setAttribute('aria-hidden', 'true')
         plate.innerHTML = '<img src="/img/hero-poster.jpg" alt="">'
         document.body.appendChild(plate)
       }
-      document.documentElement.classList.add('se-locked')
+      document.documentElement.classList.toggle('se-locked', !seen)
     } else {
       document.documentElement.classList.remove('se-locked')
     }
 
     if (typeof window.__seReinit === 'function') window.__seReinit()
     if (typeof window.__smInit === 'function') window.__smInit()
+    if (typeof window.__ctInit === 'function') window.__ctInit()
     if (typeof window.__ndInit === 'function') window.__ndInit()
 
     window.scrollTo(0, 0)
